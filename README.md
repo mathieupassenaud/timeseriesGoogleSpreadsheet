@@ -1,4 +1,4 @@
-==== Google Apps Script - timeseries on google Spreadsheet ==== 
+# Google Apps Script - timeseries on google Spreadsheet
 
 https://script.google.com
 
