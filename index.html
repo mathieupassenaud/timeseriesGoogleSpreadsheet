@@ -1,0 +1,69 @@
+<html>
+<head>
+<title>Push values</title>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+</head>
+<body>
+<h3>Pushing values to hub</h3>
+ID : <input type="text" id="id"></input>
+<input type="button" onClick="go()" value="start"/>
+<input type="button" onClick="stop()" value="stop"/>
+</body>
+<script langage="javascript">
+
+		var light = 0;
+		var proximity = 0;
+		var interval;
+		var ax = 0;
+		var ay = 0;
+		var az = 0;
+		var rotationAlpha = 0;
+		var rotationBeta = 0;
+		var rotationGamma = 0;
+    
+		
+		if (window.DeviceMotionEvent != undefined) {
+			window.ondevicemotion = function(e) {
+				ax = e.accelerationIncludingGravity.x;
+				ay = e.accelerationIncludingGravity.y;
+				az = e.accelerationIncludingGravity.z;
+
+				if ( e.rotationRate ) {
+					rotationAlpha = e.rotationRate.alpha;
+					rotationBeta = e.rotationRate.beta;
+					rotationGamma = e.rotationRate.gamma;
+				}		
+			}
+		}
+		window.addEventListener('devicelight', function(event) {
+    			// Get the ambient light level in lux.
+    			light = event.value;
+		});
+
+		// An event listener for a DeviceProximityEvent.
+		window.addEventListener('deviceproximity', function(event) {
+			// The device proximity (in cm).
+			proximity = event.value;
+		});
+		function go(){
+			interval = setInterval("loop()", 1000);
+		}
+		function stop(){
+			clearInterval(interval);
+		}
+		function loop(){
+			var device = $("#id").val();
+			navigator.vibrate(50);
+			var battery = -1;
+			if(navigator.battery != null){
+				battery = navigator.battery.level;
+			} 
+			var args = "?device="+device+"&proximity="+proximity+"&battery="+battery+"&light="+light+"&ax="+ax+"&ay="+ay+"&az="+az+"&rotationa="+rotationAlpha+"&rotationb="+rotationBeta+"&rotationg="+rotationGamma;
+			
+			var url = ""
+			$.ajax({
+  				url: url+""+args
+			});
+		}
+	</script>
+</html>
